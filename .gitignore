@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environments
+env/
+venv/
+.env
+
+# Django static and media (don't commit uploaded media)
+staticfiles/
+media/*.sqlite3
+
+# Tools and temporary binaries
+tools/
+
+# Docker
+.dockerignore
+
+# Database
+db.sqlite3

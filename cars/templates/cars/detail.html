@@ -1,0 +1,74 @@
+{% extends "cars/base.html" %}
+{% block title %}{{ car.title }} — EMMDAVE AUTOS{% endblock %}
+
+{% block content %}
+<div class="container py-5 animate__animated animate__fadeIn">
+  <div class="row align-items-center bg-dark bg-opacity-75 rounded-4 p-4 text-light shadow-lg">
+
+    <!-- Image Gallery -->
+    <div class="col-md-6">
+      {% if car.images.exists %}
+ <div id="carGallery" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner rounded-4 shadow-lg">
+            {% for img in car.images.all %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ img.image.url }}" class="d-block w-100 rounded-4" alt="{{ img.alt }}">
+              </div>
+            {% endfor %}
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carGallery" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carGallery" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+          </button>
+        </div>
+      {% else %}
+        <img src="https://via.placeholder.com/600x400?text=No+Image" class="img-fluid rounded-4 shadow-lg" alt="No image available">
+      {% endif %}
+    </div>
+
+    <!-- Car Details -->
+    <div class="col-md-6 mt-4 mt-md-0">
+      <h1 class="text-warning">{{ car.title }}</h1>
+      <p class="lead">{{ car.description }}</p>
+
+      <ul class="list-group list-group-flush bg-transparent">
+        {% if car.price %}
+        <li class="list-group-item bg-transparent text-light border-secondary">
+          <strong>💰 Price:</strong> ₦{{ car.price|floatformat:0 }}
+        </li>
+        {% endif %}
+        {% if car.year %}
+        <li class="list-group-item bg-transparent text-light border-secondary">
+          <strong>📅 Year:</strong> {{ car.year }}
+        </li>
+        {% endif %}
+        {% if car.mileage %}
+        <li class="list-group-item bg-transparent text-light border-secondary">
+          <strong>🛣 Mileage:</strong> {{ car.mileage }}
+        </li>
+        {% endif %}
+        {% if car.dealer %}
+        <li class="list-group-item bg-transparent text-light border-secondary">
+          <strong>📍 Dealer:</strong> {{ car.dealer.name }}
+        </li>
+        {% endif %}
+      </ul>
+
+      <a href="https://wa.me/2348012345678?text=Hi, I'm interested in {{ car.title }}" 
+         target="_blank" 
+         class="btn btn-success btn-lg mt-4 w-100 animate__animated animate__pulse animate__infinite">
+         💬 Chat on WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <!-- Back button -->
+  <div class="mt-5 text-center">
+    <a href="{% url 'cars:list' %}" class="btn btn-outline-warning btn-lg rounded-pill px-4 animate__animated animate__fadeInUp">
+      ← Back to Cars
+    </a>
+  </div>
+</div>
+{% endblock %}

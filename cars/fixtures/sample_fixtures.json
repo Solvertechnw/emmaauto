@@ -1,0 +1,29 @@
+[
+  {
+    "model": "cars.dealer",
+    "pk": 1,
+    "fields": {
+      "name": "Fixture Dealer",
+      "address": "Alimosho, Lagos",
+      "phone": "+2348000000000",
+      "email": "dealer@example.com",
+      "website": "https://example.com"
+    }
+  },
+  {
+    "model": "cars.car",
+    "pk": 1,
+    "fields": {
+      "dealer": 1,
+      "title": "Fixture 2019 Nissan Altima",
+      "description": "Nice sedan from fixture.",
+      "price": "4200000.00",
+      "make": "Nissan",
+      "model": "Altima",
+      "year": 2019,
+      "mileage": "80000",
+      "created": "2025-10-01T00:00:00Z",
+      "slug": "fixture-2019-nissan-altima"
+    }
+  }
+]

@@ -1,0 +1,9 @@
+Django>=4.2
+djangorestframework
+requests
+beautifulsoup4
+gunicorn
+Pillow
+python-dotenv
+selenium
+webdriver-manager

@@ -1,0 +1,120 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+{% block title %}Home — EMMDAVE AUTOS{% endblock %}
+
+{% block content %}
+<!-- Background Video (Mobile Optimized) -->
+<link rel="stylesheet" href="{% static 'cars/css/home-bg.css' %}">
+<div id="bg-media">
+  <video id="bg-video" autoplay muted loop playsinline webkit-playsinline preload="auto" poster="{{ MEDIA_URL }}cars/redr.webp" data-media-url="{{ MEDIA_URL }}cars/">
+    <!-- Preferred optimized MP4 for faststart and mobile -->
+    <source src="{{ MEDIA_URL }}cars/carv-720.mp4" type="video/mp4">
+    <!-- WebM optimized variant if the browser prefers it -->
+    <source src="{{ MEDIA_URL }}cars/carv-720.webm" type="video/webm">
+    <!-- Fallback to original uploaded MP4 -->
+    <source src="{{ MEDIA_URL }}cars/carv.mp4" type="video/mp4">
+    <img src="{{ MEDIA_URL }}cars/redr.webp" alt="EMMDAVE AUTOS">
+  </video>
+  <!-- overlay for user tap-to-play when autoplay is blocked -->
+  <div id="bg-tap-overlay" class="bg-tap-overlay" role="button" aria-hidden="true" tabindex="-1">
+    <span class="bg-tap-text">Tap to play background video</span>
+  </div>
+</div>
+
+<!-- Hero Section with Customer Counter -->
+<div class="container text-center text-light py-5" style="position:relative; z-index:1;">
+  <div class="round-text animate__animated animate__fadeIn">EMMDAVE AUTOS</div>
+  <h1 class="display-4 fw-bold text-warning animate__animated animate__bounceInDown mt-4">🚗 Welcome!</h1>
+  <p class="lead">
+    Over <span id="heroCounter">1500</span> Happy Customers
+  </p>
+</div>
+
+<!-- About Section -->
+<section id="about" class="container bg-dark bg-opacity-50 rounded-4 p-4 mt-5" style="position:relative; z-index:1;">
+  <h2 class="text-warning">Why Choose Us</h2>
+  <p>
+    We are a trusted car dealership in Lagos, Nigeria. 
+    EMMDAVE AUTOS has delivered over <strong>{{ customers|default:1500 }}</strong> cars across Nigeria 
+    with unmatched customer satisfaction.
+  </p>
+</section>
+
+<!-- Cars Section -->
+<section id="cars" class="container mt-5" style="position:relative; z-index:1;">
+  <h2 class="text-warning text-center">Available Cars</h2>
+  <div class="row mt-4">
+    {% for car in cars %}
+    <div class="col-md-3 mb-4">
+      <div class="card bg-dark text-light border-0 shadow-lg">
+        {% if car.images.first %}
+          <img src="{{ car.images.first.image.url }}" class="card-img-top" style="height:180px;object-fit:cover;" alt="{{ car.title }}">
+        {% else %}
+          <img src="https://via.placeholder.com/300x180?text=No+Image" class="card-img-top" alt="No image available">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title text-warning">{{ car.title }}</h5>
+          <p class="card-text">{{ car.description|truncatewords:10 }}</p>
+          <a href="{% url 'cars:detail' car.slug %}" class="btn btn-warning btn-sm w-100">View Details</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-light text-center">No cars available at the moment.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Customer Counter Section -->
+<section id="counter-section" class="text-center mt-5" style="position:relative; z-index:1;">
+  <h2 class="text-warning">Customer Counter</h2>
+  <h3 id="sectionCounter" class="fw-bold display-5 text-success mt-2">1500</h3>
+</section>
+
+<!-- Google Map -->
+<section id="map" class="container mt-5" style="position:relative; z-index:1;">
+  <h2 class="text-warning text-center">Our Location</h2>
+  <iframe class="rounded-4 mt-3 w-100" height="350"
+    src="https://www.google.com/maps?q=Alimosho,+Lagos,+Nigeria&output=embed"
+    title="EMMDAVE AUTOS location map" loading="lazy" allowfullscreen></iframe>
+</section>
+
+<!-- WhatsApp Button -->
+<a href="https://wa.me/2348012345678" target="_blank" style="position:fixed;bottom:20px;right:20px; z-index:2;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="60" alt="WhatsApp">
+</a>
+
+<!-- Infinite Customer Counter Script -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const heroCounter = document.getElementById("heroCounter");
+  const sectionCounter = document.getElementById("sectionCounter");
+
+  let heroValue = parseInt(heroCounter.innerText) || 1500;
+  let sectionValue = parseInt(sectionCounter.innerText) || 1500;
+
+  function countUp() {
+    heroValue += Math.floor(Math.random() * 10) + 1;
+    sectionValue += Math.floor(Math.random() * 10) + 1;
+
+    heroCounter.innerText = heroValue.toLocaleString();
+    sectionCounter.innerText = sectionValue.toLocaleString();
+
+    requestAnimationFrame(countUp);
+  }
+
+  countUp();
+});
+</script>
+
+<!-- Spinning Text CSS -->
+<!-- Play button and background behavior are provided by external static files -->
+<button id="bg-play-button" type="button" title="Play background video" aria-label="Play background video">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <path d="M8 5v14l11-7z"/>
+  </svg>
+  <span class="visually-hidden">Play background video</span>
+</button>
+
+<script src="{% static 'cars/js/home-bg.js' %}"></script>
+{% endblock %}
