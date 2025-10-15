@@ -7,13 +7,34 @@ from .forms import ContactForm  # ← import your ContactForm
 
 
 def home(request):
-    cars = Car.objects.all().order_by('-year')[:6]
+    cars = Car.objects.all().order_by('-year')
     return render(request, "cars/home.html", {"cars": cars})
 
 
 def car_list(request):
-    cars = Car.objects.all()
-    return render(request, "cars/list.html", {"cars": cars})
+    qs = Car.objects.all().order_by('-year')
+    # filters from GET
+    make = request.GET.get('make')
+    min_year = request.GET.get('min_year')
+    max_price = request.GET.get('max_price')
+
+    if make:
+        # case-insensitive exact match for make (typing from datalist will match)
+        qs = qs.filter(make__iexact=make)
+    if min_year:
+        try:
+            qs = qs.filter(year__gte=int(min_year))
+        except ValueError:
+            pass
+    if max_price:
+        try:
+            qs = qs.filter(price__lte=int(max_price))
+        except ValueError:
+            pass
+
+    # gather distinct makes for suggestions/autocomplete in the filter form
+    makes = Car.objects.order_by('make').values_list('make', flat=True).distinct()
+    return render(request, "cars/list.html", {"cars": qs, "makes": makes})
 
 
 def car_detail(request, slug):

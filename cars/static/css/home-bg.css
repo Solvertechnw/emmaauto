@@ -20,3 +20,54 @@
 /* Helper class to style paused state if needed */
 .bg-video-paused img{display:block}
 .bg-video-paused video{display:none}
+
+/* Image marquee for home page (#solver) */
+#solver{position:relative;overflow:hidden;width:100%;background:transparent;padding:12px 0;z-index:1}
+.solver-wrap{width:100%;overflow:hidden}
+/* JS-driven ticker: no CSS animation (handled by JS for consistent motion) */
+.solver-track{display:flex;align-items:center;gap:12px;white-space:nowrap;will-change:transform;transform:translateX(0)}
+/* Small, compact logos for the marquee */
+/* very small compact logos */
+.solver-track img{height:24px;max-height:6vh;object-fit:contain;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.25)}
+
+/* keyframes unused (JS ticker used instead) */
+
+/* Make the marquee slower and images smaller on small screens */
+@media (max-width:767px){
+	.solver-track{animation-duration:32s}
+	.solver-track img{height:28px;max-height:5vh}
+	.solver-track{gap:10px}
+}
+
+@media (min-width:1200px){
+	.solver-track img{height:48px}
+	.solver-track{animation-duration:18s}
+}
+
+/* tighten spacing by default */
+.solver-track{gap:12px}
+
+/* Pause on hover / when .paused class is set */
+.solver-track.paused,
+.solver-track:hover{animation-play-state:paused}
+
+/* Edge fade overlays */
+#solver::before, #solver::after{
+	content:'';position:absolute;top:0;height:100%;width:6%;pointer-events:none;z-index:2}
+#solver::before{left:0;background:linear-gradient(90deg,rgba(0,0,0,0.8),transparent)}
+#solver::after{right:0;background:linear-gradient(270deg,rgba(0,0,0,0.0),rgba(0,0,0,0.6))}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce){
+	.solver-track{animation: none; transform: translateX(0);}
+}
+
+/* Controls */
+.solver-controls{position:relative;display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:8px}
+.solver-control{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.08);color:#fff;padding:6px;border-radius:6px;cursor:pointer}
+.solver-control svg{display:block}
+.solver-control:focus{outline:2px solid rgba(255,255,255,0.2);outline-offset:2px}
+
+/* Use transform for GPU compositing */
+.solver-track{transform: translateZ(0); will-change: transform}
+

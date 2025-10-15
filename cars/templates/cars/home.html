@@ -40,6 +40,136 @@
   </p>
 </section>
 
+<!-- Image marquee (infinite left-to-right) -->
+<div id="solver" class="solv" aria-label="Partner logos marquee" tabindex="0">
+  <div class="solver-wrap">
+    <div class="solver-track" role="list">
+      <img src="{{ MEDIA_URL }}cars/fer1.png" alt="fer1" loading="lazy">
+      <img src="{{ MEDIA_URL }}cars/fer2.png" alt="fer2" loading="lazy">
+      <img src="{{ MEDIA_URL }}cars/fer3.png" alt="fer3" loading="lazy">
+    </div>
+  </div>
+</div>
+
+  <div class="solver-controls" aria-hidden="false">
+    <button id="solver-toggle" class="solver-control" type="button" aria-pressed="false" aria-label="Pause marquee">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="#fff"/>
+      </svg>
+      <span class="visually-hidden">Pause marquee</span>
+    </button>
+    <div id="solver-announcer" class="visually-hidden" aria-live="polite"></div>
+  </div>
+
+  <script>
+  // Enhanced marquee controls: click image or control to toggle pause/play; update ARIA
+  (function(){
+    var solver = document.getElementById('solver');
+    if(!solver) return;
+    var track = solver.querySelector('.solver-track');
+    var btn = document.getElementById('solver-toggle');
+    var ann = document.getElementById('solver-announcer');
+
+    var setPaused = function(p){
+      if(p){
+        track.classList.add('paused');
+        if(btn) { btn.setAttribute('aria-pressed','true'); btn.setAttribute('aria-label','Play marquee'); }
+        if(ann) ann.textContent = 'Marquee paused';
+      } else {
+        track.classList.remove('paused');
+        if(btn) { btn.setAttribute('aria-pressed','false'); btn.setAttribute('aria-label','Pause marquee'); }
+        if(ann) ann.textContent = 'Marquee playing';
+      }
+    };
+
+    var togglePause = function(){ setPaused(!track.classList.contains('paused')); };
+
+  // Control button only (clicking images no longer toggles)
+  if(btn) btn.addEventListener('click', function(e){ e.stopPropagation(); togglePause(); });
+    // Keyboard
+    solver.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); togglePause(); } });
+
+    // initialize announcer
+    if(ann) ann.textContent = track.classList.contains('paused') ? 'Marquee paused' : 'Marquee playing';
+  })();
+  </script>
+
+  <script>
+  // JS-driven ticker for smooth left-to-right motion (car-like)
+  (function(){
+    var solver = document.getElementById('solver');
+    if(!solver) return;
+    var track = solver.querySelector('.solver-track');
+  var speed = 60; // pixels per second (higher = faster)
+  var paused = track.classList.contains('paused');
+
+    // Continuous leftward loop with seamless wrap. We duplicate the track items
+    // in JS (if not already duplicated) so we can scroll the first set off-screen
+    // and immediately continue with the cloned set.
+    function computeSingleWidth(){
+      var children = Array.prototype.slice.call(track.children);
+      // assume original set is the first N children; if we stored originalCount use it
+      var orig = parseInt(track.dataset.origCount || children.length, 10);
+      orig = Math.max(1, Math.min(orig, children.length));
+      var w = 0;
+      for(var i=0;i<orig;i++){
+        w += children[i].getBoundingClientRect().width;
+      }
+      var gap = parseFloat(getComputedStyle(track).gap || 10);
+      w += gap * Math.max(0, orig - 1);
+      return w;
+    }
+
+    function ensureDuplicate(){
+      var children = Array.prototype.slice.call(track.children);
+      if(!track.dataset.origCount){ track.dataset.origCount = children.length; }
+      var orig = parseInt(track.dataset.origCount, 10);
+      // if we already have at least 2*orig items, assume duplicated
+      if(children.length >= orig * 2) return;
+      // clone the original items
+      for(var i=0;i<orig;i++){
+        var clone = children[i].cloneNode(true);
+        track.appendChild(clone);
+      }
+    }
+
+    var pos = 0;
+    var singleWidth = 0;
+    var lastTs = null;
+
+    function frame(ts){
+      if(!lastTs) lastTs = ts;
+      var dt = (ts - lastTs)/1000; lastTs = ts;
+      if(!paused){
+        pos -= speed * dt; // move left continuously
+        if(singleWidth && Math.abs(pos) >= singleWidth){
+          pos += singleWidth; // wrap
+        }
+        track.style.transform = 'translateX(' + pos + 'px)';
+      }
+      requestAnimationFrame(frame);
+    }
+
+    var observer = new MutationObserver(function(){ paused = track.classList.contains('paused'); });
+    observer.observe(track, { attributes:true, attributeFilter:['class'] });
+
+    function kickOff(){
+      // ensure cloned set exists and compute single set width for wrapping
+      ensureDuplicate();
+      singleWidth = computeSingleWidth() || 0;
+      pos = 0;
+      lastTs = null;
+      requestAnimationFrame(frame);
+    }
+
+    window.addEventListener('load', kickOff);
+    window.addEventListener('resize', function(){
+      ensureDuplicate();
+      singleWidth = computeSingleWidth();
+    });
+  })();
+  </script>
+
 <!-- Cars Section -->
 <section id="cars" class="container mt-5" style="position:relative; z-index:1;">
   <h2 class="text-warning text-center">Available Cars</h2>

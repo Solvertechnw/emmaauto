@@ -24,7 +24,12 @@
       <form method="get" class="mb-0">
         <div class="mb-2">
           <label class="form-label">Make</label>
-          <input name="make" value="{{ request.GET.make }}" class="form-control" placeholder="e.g. Toyota">
+          <input name="make" value="{{ request.GET.make }}" class="form-control" list="makes-list" placeholder="e.g. Toyota">
+          <datalist id="makes-list">
+            {% for m in makes %}
+              <option value="{{ m }}">{{ m }}</option>
+            {% endfor %}
+          </datalist>
         </div>
         <div class="mb-2">
           <label class="form-label">Min Year</label>

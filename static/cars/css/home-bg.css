@@ -20,3 +20,21 @@
 /* Helper class to style paused state if needed */
 .bg-video-paused img{display:block}
 .bg-video-paused video{display:none}
+
+/* Marquee / solver styles */
+#solver{position:relative;width:100%;overflow:hidden;margin:18px 0}
+.solver-wrap{width:100%;overflow:hidden}
+.solver-track{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;will-change:transform;transform:translate3d(0,0,0);}
+.solver-track img{height:24px !important;min-width:auto !important;max-width:none !important;display:inline-block !important;object-fit:contain !important;border-radius:4px}
+.solver-controls{position:relative;display:flex;align-items:center;gap:8px;justify-content:center;margin-top:6px}
+.solver-control{background:rgba(0,0,0,0.4);border:0;color:#fff;padding:6px 8px;border-radius:6px;cursor:pointer}
+.solver-track.paused{opacity:0.85}
+
+/* keep marquee compact on small screens */
+@media (max-width:480px){
+	.solver-track img{height:18px !important;gap:8px}
+}
+
+@media (prefers-reduced-motion:reduce){
+	.solver-track{animation:none}
+}

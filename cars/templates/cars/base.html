@@ -75,10 +75,10 @@
     /* WhatsApp floating button */
     .whatsapp-float {
       position: fixed;
-      bottom: 20px;
+      top: 12px; /* place near the top / navbar */
       right: 20px;
-      z-index: 999;
-      animation: bounce 2s infinite;
+      z-index: 1050; /* above navbar */
+      animation: none; /* disable bounce in navbar area */
     }
 
     @keyframes bounce {
@@ -179,8 +179,8 @@
   </main>
 
   <!-- 💬 WhatsApp Floating Button -->
-  <a href="https://wa.me/2348012345678" target="_blank" class="whatsapp-float">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="60" alt="Chat on WhatsApp">
+  <a href="https://wa.me/2348012345678" target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="44" alt="Chat on WhatsApp">
   </a>
 
   <!-- 🌈 Footer -->
@@ -230,10 +230,37 @@
       <div class="text-center" style="color: #aaa;">
         &copy; {{ now|date:"Y" }} <strong>EMMDAVE AUTOS</strong>. All rights reserved.
       </div>
+      <div>Emm@emmdaveauto.com <br>23427653445</div>
+      <!-- Rotating circular logo -->
+      <div class="footer-logo" aria-hidden="true">EmmDave Auto</div>
     </div>
   </footer>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script id="chatway" async="true" src="https://cdn.chatway.app/widget.js?id=obQ9K3axg5ej"></script>
+  <style>
+    /* Center the rotating footer logo inside the footer */
+    .footer-logo{
+      position:relative; /* participate in footer layout */
+      margin:20px auto 0; /* centered horizontally */
+      width:86px;
+      height:86px;
+      background:linear-gradient(135deg,#ffc107,#ff6f00);
+      color:#000;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      box-shadow:0 6px 20px rgba(0,0,0,0.4);
+      transform-origin:center center;
+      animation:spinLogo 6s linear infinite;
+      font-size:12px;
+      text-align:center;
+      padding:6px;
+    }
+    @keyframes spinLogo{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+  </style>
 </body>
 </html>
